@@ -1,16 +1,44 @@
 # check-npm-cache
 
-This script will check your npm cache and find if any of the affected packages was pulled in your machine. 
+This script checks the npm cache for known indicators of compromise from the axios supply chain incident.
 
-Requires jq, use `brew install jq` to install. 
+It does not scan only the current folder. It queries the npm cache for the current user with `npm cache ls`, so it will report whether those package versions were cached anywhere on the machine for that npm account.
 
-Use `chmod +x check-npm-cache.sh` before usage to make it executable. 
+Requirements:
 
-Run with `bash check-npm-cache.sh`
+- `bash`
+- `npm`
+- `jq`
 
-Only tested on MacOS.
+Install `jq`:
 
-Based on: https://gist.github.com/phxgg/737198b6e945aba7046e9f9328576271
+- macOS: `brew install jq`
+- Debian/Ubuntu: `sudo apt-get install jq`
+- Fedora/RHEL: `sudo dnf install jq`
+- Arch: `sudo pacman -S jq`
+
+Usage:
+
+```bash
+chmod +x latest.sh
+bash latest.sh
+```
+
+Current indicators checked:
+
+- `axios@1.14.1`
+- `plain-crypto-js@4.2.1`
+
+Notes:
+
+- The npm registry state changed after the incident. As of March 31, 2026, `axios` was rolled back so the `latest` dist-tag points to `1.14.0`.
+- `plain-crypto-js` has since been replaced by an npm security holding package, but `plain-crypto-js@4.2.1` in cache is still an indicator of prior exposure.
+
+Sources:
+
+- https://x.com/feross/status/2038807290422370479
+- https://registry.npmjs.org/axios
+- https://registry.npmjs.org/plain-crypto-js
 
 
 Attacks covered:
